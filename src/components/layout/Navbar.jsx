@@ -1,9 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme === 'dark';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -14,7 +29,7 @@ function Navbar() {
   ];
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-white dark:bg-secondary-900 shadow-sm">
       <div className="container">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -23,21 +38,31 @@ function Navbar() {
                   <circle cx="15" cy="20" r="10" stroke="#0682ff"/>
                   <circle cx="15" cy="20" r="6" stroke="#0682ff" strokeWidth="3"/>
               </svg>  
-              <span className="text-2xl font-bold text-primary-600 mt-1.5">RentVerse</span>
+              <span className="text-2xl font-bold text-primary-600 dark:text-primary-600 mt-1.5">RentVerse</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-8">
+          <div className="hidden md:flex md:items-center md:space-x-8 ">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className="text-secondary-600 hover:text-primary-600 px-3 py-2 text-sm font-medium"
+                className="text-secondary-600 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 text-sm font-medium"
               >
                 {item.name}
               </Link>
             ))}
+
+            <button onClick={() => setDarkMode(!darkMode)}
+              className="dark:text-white">
+              {darkMode ? (
+                <FiSun size={20} />
+              ) : (
+                <FiMoon size={20} />
+              )}
+            </button>
+
             <button
               className="btn"
             >
