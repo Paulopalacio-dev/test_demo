@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiMenu, FiX, FiSun, FiMoon } from 'react-icons/fi';
+import { useWallet } from '../../hooks/useWallet';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,6 +9,8 @@ function Navbar() {
     const savedTheme = localStorage.getItem('theme');
     return savedTheme === 'dark';
   });
+
+  const { connectWallet } = useWallet();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -65,6 +68,7 @@ function Navbar() {
 
             <button
               className="btn"
+              onClick={connectWallet}
             >
               Connect
             </button>
@@ -97,8 +101,11 @@ function Navbar() {
                 </Link>
               ))}
               <button
-                className="block px-3 py-2 text-base font-medium text-white bg-primary-600 hover:bg-primary-700"
-                onClick={() => setIsOpen(false)}
+                className="block px-3 py-2 text-base font-medium text-white bg-primary-600 hover:bg-primary-700 w-full text-left"
+                onClick={() => {
+                  connectWallet();
+                  setIsOpen(false);
+                }}
               >
                 Connect
               </button>
